@@ -50,6 +50,7 @@ connection.query('SELECT * FROM products', function (error, results, fields) {
             
                     connection.query(`UPDATE products SET stock_quantity = ${newStock} WHERE item_id = ${productID}`, function(err, results, fields){
                         if (err) throw err;
+                        addSales(total, productID);
                         console.log(`Your order was sucessful\nYour total is $${total}`);
                     })
                 }
@@ -59,6 +60,11 @@ connection.query('SELECT * FROM products', function (error, results, fields) {
         });
 });
 
-
+function addSales(total, productID) {
+    connection.query(`UPDATE products SET product_sales = product_sales + ${total} WHERE item_id = ${productID}`, function(err, results){
+        if (err) throw err;
+        console.log(`Sales recorded`);
+    });
+}
 
 // connection.end();

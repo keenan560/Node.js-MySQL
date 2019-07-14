@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/keenan560/Node.js-MySQL#readme",
   "dependencies": {
+    "cli-table-redemption": "^1.0.1",
     "inquirer": "^6.5.0",
     "mysql": "^2.17.1"
   }
