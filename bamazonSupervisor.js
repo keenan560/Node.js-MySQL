@@ -21,7 +21,8 @@ inquirer
             message: 'What would you like to do Supervisor?',
             choices: [
                 'View Product Sales by Department',
-                'Create New Department'
+                'Create New Department',
+                'Exit'
             ]
         }
     ]).then(answers => {
@@ -33,7 +34,9 @@ inquirer
             case 'Create New Department':
                 createDept();
                 break;
-
+            case 'Exit':
+                connection.end();
+                break;
         }
     });
 
@@ -47,23 +50,25 @@ function viewProdSales() {
     p.product_sales as Sales
     from 
     departments d
-    right join products p
+    left join products p
     on d.department_name = p.department_name;`, function (err, results) {
             if (err) throw err;
             // console.log(results[0]);
 
             var table = new Table({
-                head: ['Department ID', 'Department Name', 'Over Head Costs', 'Product Sales'],
-                colWidths: [20, 20, 20, 20]
+                head: ['Department ID', 'Department Name', 'Over Head Costs', 'Product Sales', 'Total Profit'],
+                colWidths: [20, 20, 20, 20, 20]
             });
 
             for (var i = 0; i < results.length; i++) {
-                table.push([`${results[i].Dept_ID}`,`${results[i].Dept_Name}`,`${results[i].Over_Head}`,`${results[i].Sales}`]);
+                var totalProfit = results[i].Sales - results[i].Over_Head;
+                table.push([`${results[i].Dept_ID}`, `${results[i].Dept_Name}`, `${results[i].Over_Head}`, `${results[i].Sales}`, totalProfit]);
             }
 
             
 
             console.log(table.toString());
+            connection.end();
         })
 };
 
@@ -86,6 +91,7 @@ function createDept() {
             connection.query(`INSERT INTO departments (department_name, over_head_costs) VALUES ('${deptName}', ${overHead})`, function (err, results) {
                 if (err) throw err;
                 console.log(`Department added!`);
+                connection.end();
             });
         });
 

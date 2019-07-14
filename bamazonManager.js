@@ -22,7 +22,8 @@ inquirer
                 'View Products for Sale',
                 'View Low Inventory',
                 'Add to Inventory',
-                'Add New Product'
+                'Add New Product',
+                "Exit"
             ]
         }
     ]).then(answers => {
@@ -40,6 +41,9 @@ inquirer
                 break;
             case 'Add New Product':
                 addProd();
+                break;
+            case "Exit":
+                connection.end();
                 break;
         }
     });

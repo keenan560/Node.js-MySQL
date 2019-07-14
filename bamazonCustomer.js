@@ -43,6 +43,7 @@ connection.query('SELECT * FROM products', function (error, results, fields) {
                
                 if (parseInt(results[0].stock_quantity.toString()) < parseInt(customerStock)) {
                     console.log(`Insufficient quantity! There are only ${results[0].stock_quantity} left.`);
+                    connection.end();
                 } else {
 
                     var newStock = parseInt(results[0].stock_quantity.toString()) - parseInt(customerStock);
@@ -52,6 +53,7 @@ connection.query('SELECT * FROM products', function (error, results, fields) {
                         if (err) throw err;
                         addSales(total, productID);
                         console.log(`Your order was sucessful\nYour total is $${total}`);
+                        connection.end();
                     })
                 }
 
