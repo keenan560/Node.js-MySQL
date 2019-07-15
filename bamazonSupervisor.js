@@ -45,15 +45,17 @@ inquirer
 
 function viewProdSales() {
     connection.query(`
-    select 
-    d.department_id as Dept_ID,
-    d.department_name as Dept_Name,
-    d.over_head_costs as Over_Head,
-    p.product_sales as Sales
-    from 
-    departments d
-    left join products p
-    on d.department_name = p.department_name;`, function (err, results) {
+  select 
+d.department_id as Dept_ID,
+p.department_name as Dept_Name,
+d.over_head_costs as Over_Head,
+p.product_sales as Sales
+from 
+departments d
+right join products p
+on d.department_name = p.department_name
+
+;`, function (err, results) {
             if (err) throw err;
             // console.log(results[0]);
 
