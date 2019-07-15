@@ -30,7 +30,6 @@ inquirer
         // console.log(answers); 
         switch (answers.menuChoice) {
             case 'View Products for Sale':
-
                 viewAll();
                 break;
             case 'View Low Inventory':
