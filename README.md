@@ -52,11 +52,26 @@ This file will display in the console a menu of options to select from:
 
 - add new product
 
+    Goes thru the reuqired fields to input a new item into the products table.
 
 - exit
 
+    Executes connection.end() which stops and file from running and end connection to the database. 
 
 
 # Bamazon Supervisor JS
 
+This file will give the Bamazon Supervisor two options:
 
+- view product sales by department
+
+    Using a SQL the function will the join the products and department tables in order to see a item's department and the name of sales associated with it. The table will also calculate a total profit field which is the item's sales minus the associated department's over head costs. 
+
+- create new department
+
+    Goes thru the required fields to input a new department into the departments table.
+
+
+# Demo
+
+    Please see the link to a demonstration:
