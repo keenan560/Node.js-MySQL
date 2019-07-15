@@ -4,6 +4,8 @@ var inquirer = require('inquirer');
 
 var Table = require('cli-table-redemption');
 
+const chalk = require('chalk');
+
 var connection = mysql.createConnection({
     host: 'localhost',
     user: 'root',
@@ -56,18 +58,18 @@ function viewProdSales() {
             // console.log(results[0]);
 
             var table = new Table({
-                head: ['Department ID', 'Department Name', 'Over Head Costs', 'Product Sales', 'Total Profit'],
+                head: [chalk.yellow('Department ID'), chalk.yellow('Department Name'), chalk.yellow('Over Head Costs'), chalk.yellow('Product Sales'), chalk.yellow('Total Profit')],
                 colWidths: [20, 20, 20, 20, 20]
             });
 
             for (var i = 0; i < results.length; i++) {
                 var totalProfit = results[i].Sales - results[i].Over_Head;
-                table.push([`${results[i].Dept_ID}`, `${results[i].Dept_Name}`, `${results[i].Over_Head}`, `${results[i].Sales}`, totalProfit]);
+                table.push([`${chalk.white(results[i].Dept_ID)}`, `${results[i].Dept_Name}`, `${chalk.red(results[i].Over_Head)}`, `${results[i].Sales}`, chalk.green(totalProfit)]);
             }
 
-            
+        
 
-            console.log(table.toString());
+            console.log(chalk.cyan(table.toString()));
             connection.end();
         })
 };

@@ -1,4 +1,5 @@
 
+const chalk = require('chalk');
 
 var Table = require('cli-table-redemption');
 
@@ -21,20 +22,16 @@ connection.query('SELECT * FROM products', function (error, results, fields) {
     if (error) throw error;
 
     var table = new Table({
-        head: ['Item No', 'Product Name', 'Department', 'Price', 'Stock'],
+        head: [chalk.yellow('Item No'), chalk.yellow('Product Name'), chalk.yellow('Department'), chalk.yellow('Price'), chalk.yellow('Stock')],
         colWidths: [15, 25, 20, 15, 15]
     });
 
     for (var i = 0; i < results.length; i++) {
-        table.push([`${results[i].item_id}`,`${results[i].product_name}`,`${results[i].department_name}`,`${results[i].price.toFixed(2)}`,`${results[i].stock_quantity}`]);
+        table.push([`${chalk.white(results[i].item_id)}`,`${results[i].product_name}`,`${results[i].department_name}`,`${chalk.green('$')}${chalk.green(results[i].price.toFixed(2))}`,`${chalk.blue(results[i].stock_quantity)}`]);
     }
 
-    // for (var i = 0; i < results.length; i++) {
-    //     console.log(`-------Item No: ${results[i].item_id}-------\nProduct Name: ${results[i].product_name}\nDepartment: ${results[i].department_name}\nPrice: $${results[i].price.toFixed(2)}\nStock: ${results[i].stock_quantity}
-    //     `);
-    // };
 
-    console.log(table.toString());
+    console.log(chalk.cyan(table.toString()));
     inquirer
         .prompt([
             {
@@ -81,5 +78,3 @@ function addSales(total, productID) {
         console.log(`Sales recorded`);
     });
 }
-
-// connection.end();

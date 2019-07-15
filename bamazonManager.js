@@ -3,6 +3,10 @@ var mysql = require('mysql');
 
 var inquirer = require('inquirer');
 
+const chalk = require('chalk');
+
+var Table = require('cli-table-redemption');
+
 var connection = mysql.createConnection({
     host: 'localhost',
     user: 'root',
@@ -50,20 +54,36 @@ inquirer
 function viewAll() {
     connection.query(`SELECT * FROM products PROUCTS`, function (err, results, fields) {
         if (err) throw err;
+        var table = new Table({
+            head: [chalk.yellow('Item No'), chalk.yellow('Product Name'), chalk.yellow('Department'), chalk.yellow('Price'), chalk.yellow('Stock')],
+            colWidths: [15, 25, 20, 15, 15]
+        });
+
         for (var i = 0; i < results.length; i++) {
-            console.log(`-------Item No: ${results[i].item_id}-------\nProduct Name: ${results[i].product_name}\nDepartment: ${results[i].department_name}\nPrice: $${results[i].price.toFixed(2)}\nStock: ${results[i].stock_quantity}
-        `);
-        };
+            table.push([`${chalk.white(results[i].item_id)}`, `${results[i].product_name}`, `${results[i].department_name}`, `${chalk.green('$')}${chalk.green(results[i].price.toFixed(2))}`, `${chalk.blue(results[i].stock_quantity)}`]);
+        }
+
+
+        console.log(chalk.cyan(table.toString()));
     })
 };
 
 function viewLow() {
     connection.query(`SELECT * FROM products WHERE stock_quantity < 5`, function (err, results) {
         if (err) throw err;
+
+        var table = new Table({
+            head: [chalk.yellow('Item No'), chalk.yellow('Product Name'), chalk.yellow('Department'), chalk.yellow('Price'), chalk.yellow('Stock')],
+            colWidths: [15, 25, 20, 15, 15]
+        });
+
         for (var i = 0; i < results.length; i++) {
-            console.log(`-------Item No: ${results[i].item_id}-------\nProduct Name: ${results[i].product_name}\nDepartment: ${results[i].department_name}\nPrice: $${results[i].price.toFixed(2)}\nStock: ${results[i].stock_quantity}
-        `);
-        };
+            table.push([`${chalk.white(results[i].item_id)}`, `${results[i].product_name}`, `${results[i].department_name}`, `${chalk.green('$')}${chalk.green(results[i].price.toFixed(2))}`, `${chalk.blue(results[i].stock_quantity)}`]);
+        }
+
+        console.log(chalk.cyan(table.toString()));
+
+        connection.end();
     });
 };
 
@@ -84,10 +104,11 @@ function addInv() {
             // console.log(answers);
             var itemNo = answers.itemNo;
             var amount = answers.addAmount;
-            
+
             connection.query(`UPDATE products SET stock_quantity =  stock_quantity + ${amount} WHERE item_id = ${itemNo}`, function (err, results) {
                 if (err) throw err;
                 console.log("Inventory sucessfully added!");
+                connection.end();
             });
 
         });
@@ -97,32 +118,33 @@ function addInv() {
 
 function addProd() {
     inquirer
-    .prompt([
-        {
-           name: 'itemName',
-           message: 'Please Enter Name of New Product' 
-        }, {
-            name: "department",
-            message: `What is the name of the item's department?`,
-        }, {
-            name: 'price',
-            message: `Please Enter the Item's Price`
-        }, {
-            name: 'stock',
-            message: `Please enter the item's stock`
-        }
-    ]).then(answers => {
-        var itemName = answers.itemName;
-        var department = answers.department;
-        var price = answers.price;
-        var stock = answers.stock;
-        // console.log(answers);
+        .prompt([
+            {
+                name: 'itemName',
+                message: 'Please Enter Name of New Product'
+            }, {
+                name: "department",
+                message: `What is the name of the item's department?`,
+            }, {
+                name: 'price',
+                message: `Please Enter the Item's Price`
+            }, {
+                name: 'stock',
+                message: `Please enter the item's stock`
+            }
+        ]).then(answers => {
+            var itemName = answers.itemName;
+            var department = answers.department;
+            var price = answers.price;
+            var stock = answers.stock;
+            // console.log(answers);
 
-        connection.query(`INSERT INTO products (product_name, department_name, price, stock_quantity) VALUES ('${itemName}', '${department}', ${price}, ${stock})`, function(err, results){
-            if (err) throw err;
-            console.log("Item sucessfully added!");
+            connection.query(`INSERT INTO products (product_name, department_name, price, stock_quantity) VALUES ('${itemName}', '${department}', ${price}, ${stock})`, function (err, results) {
+                if (err) throw err;
+                console.log("Item sucessfully added!");
+                connection.end();
+            });
+
         });
-
-    });
 
 }
