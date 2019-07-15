@@ -1,7 +1,11 @@
 
+
+var Table = require('cli-table-redemption');
+
 var mysql = require('mysql');
 
 var inquirer = require('inquirer');
+
 
 var connection = mysql.createConnection({
     host: 'localhost',
@@ -15,12 +19,22 @@ connection.connect();
 
 connection.query('SELECT * FROM products', function (error, results, fields) {
     if (error) throw error;
+
+    var table = new Table({
+        head: ['Item No', 'Product Name', 'Department', 'Price', 'Stock'],
+        colWidths: [15, 25, 20, 15, 15]
+    });
+
     for (var i = 0; i < results.length; i++) {
-        console.log(`-------Item No: ${results[i].item_id}-------\nProduct Name: ${results[i].product_name}\nDepartment: ${results[i].department_name}\nPrice: $${results[i].price.toFixed(2)}\nStock: ${results[i].stock_quantity}
-        `);
-    };
+        table.push([`${results[i].item_id}`,`${results[i].product_name}`,`${results[i].department_name}`,`${results[i].price.toFixed(2)}`,`${results[i].stock_quantity}`]);
+    }
 
+    // for (var i = 0; i < results.length; i++) {
+    //     console.log(`-------Item No: ${results[i].item_id}-------\nProduct Name: ${results[i].product_name}\nDepartment: ${results[i].department_name}\nPrice: $${results[i].price.toFixed(2)}\nStock: ${results[i].stock_quantity}
+    //     `);
+    // };
 
+    console.log(table.toString());
     inquirer
         .prompt([
             {
