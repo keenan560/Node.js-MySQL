@@ -65,6 +65,7 @@ function viewAll() {
 
 
         console.log(chalk.cyan(table.toString()));
+        connection.end();
     })
 };
 
