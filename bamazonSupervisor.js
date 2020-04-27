@@ -1,3 +1,6 @@
+
+require('dotenv').config();
+
 var mysql = require('mysql');
 
 var inquirer = require('inquirer');
@@ -6,13 +9,20 @@ var Table = require('cli-table-redemption');
 
 const chalk = require('chalk');
 
-var connection = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: '1Barbuda',
-    database: 'bamazon_db'
-});
+const {
+    HOST,
+    USER,
+    PASSWORD,
+    DATABASE
 
+} = process.env
+
+var connection = mysql.createConnection({
+    host: HOST,
+    user: USER,
+    password: PASSWORD,
+    database: DATABASE
+});
 connection.connect();
 
 inquirer
@@ -47,13 +57,14 @@ function viewProdSales() {
     connection.query(`
   select 
 d.department_id as Dept_ID,
-p.department_name as Dept_Name,
+d.department_name as Dept_Name,
 d.over_head_costs as Over_Head,
 p.product_sales as Sales
 from 
 departments d
-right join products p
+left join products p
 on d.department_name = p.department_name
+
 
 ;`, function (err, results) {
             if (err) throw err;

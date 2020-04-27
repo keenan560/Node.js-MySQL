@@ -1,4 +1,6 @@
 
+require('dotenv').config();
+
 const chalk = require('chalk');
 
 var Table = require('cli-table-redemption');
@@ -7,12 +9,19 @@ var mysql = require('mysql');
 
 var inquirer = require('inquirer');
 
+const {
+    HOST,
+    USER,
+    PASSWORD,
+    DATABASE
+
+} = process.env
 
 var connection = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: '1Barbuda',
-    database: 'bamazon_db'
+    host: HOST,
+    user: USER,
+    password: PASSWORD,
+    database: DATABASE
 });
 
 connection.connect();
@@ -27,6 +36,7 @@ connection.query('SELECT * FROM products', function (error, results, fields) {
     });
 
     for (var i = 0; i < results.length; i++) {
+      
         table.push([`${chalk.white(results[i].item_id)}`,`${results[i].product_name}`,`${results[i].department_name}`,`${chalk.green('$')}${chalk.green(results[i].price.toFixed(2))}`,`${chalk.blue(results[i].stock_quantity)}`]);
     }
 

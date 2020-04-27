@@ -1,4 +1,6 @@
 
+require('dotenv').config();
+
 var mysql = require('mysql');
 
 var inquirer = require('inquirer');
@@ -7,13 +9,20 @@ const chalk = require('chalk');
 
 var Table = require('cli-table-redemption');
 
-var connection = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: '1Barbuda',
-    database: 'bamazon_db'
-});
+const {
+    HOST,
+    USER,
+    PASSWORD,
+    DATABASE
 
+} = process.env
+
+var connection = mysql.createConnection({
+    host: HOST,
+    user: USER,
+    password: PASSWORD,
+    database: DATABASE
+});
 connection.connect();
 
 inquirer
